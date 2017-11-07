@@ -1,17 +1,16 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
-
     watch: true,
-
     target: 'electron',
-
-    entry: './app/src/entry.js',
-
+    entry: {
+        'entry': './app/src/entry.js',
+        'main': './app/src/main/main.js'
+    },
     output: {
         path: __dirname + '/app/build',
         publicPath: 'build/',
-        filename: 'bundle.js'
+        filename: '[name].js'
     },
 
     module: {
