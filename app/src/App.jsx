@@ -4,46 +4,98 @@ import {ipcRenderer} from 'electron';
 import {} from './styles/global.css'
 import Logo from './components/Logo.jsx'
 import Link from './components/Link.jsx'
+import schedules from './json/schedules';
+import PrintSchedule from './components/PrintSchedule.jsx';
 
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mode: "ready",
+      sourceId: 1947284,
+      interval: null,
+      isShowSchedules: false,
+      event:{},
+      teams:[]
+    }
+  }
 
   componentDidMount() {
-    ipcRenderer.on('PRINT_TEXT', (_e, text) => {
+    console.log(schedules.schedules);
+    ipcRenderer.on('PRINT_TEXT', (_e, jsonString) => {
       try {
-        console.log('text:', text);
+        const teams = JSON.parse(jsonString);
+        console.log(teams);
 
-        $('#result_area').append(JSON.stringify(text));
-        fs.writeFile('./message2.txt', JSON.stringify(text));
+         this.setState({teams: teams});
       } catch (e) {
         console.log(e);
       }
     });
   }
-    render() {
 
-      return (
-        <div>
-              <div className="hello">
-                  <h1>Hello React3!</h1>
-              </div>
+  callApi() {
+    console.log(`callApi:${this.state.sourceId}`);
+    ipcRenderer.send('REQUEST_EVENT', this.state.sourceId);
+  }
 
-              <p>
-                  into build/, how global and scoped CSS work, how to compose
-                  React components, or simply how Webpack changes relative
-                  image paths to public paths after building.
-              </p>
+  handleClickStartButton() {
+    let interval = setInterval(() => {
+      this.callApi();
+    }, 1000);
+    this.setState({interval: interval, mode: 'start'});
+  }
 
-              <p>
-                  Check out the docs for&nbsp;
-                  <Link to='http://electron.atom.io/docs/'>Electron</Link>,&nbsp;
-                  <Link to='https://facebook.github.io/react/docs/hello-world.html'>React </Link> and&nbsp;
-                  <Link to='https://webpack.js.org/configuration/'>Webpack 2</Link>.
-                  Customize this template as you wish by adding any fancy tool
-                  you are used to. If you have any issue, please file an issue at this seed's&nbsp;
-                  <Link to='https://github.com/pastahito/electron-react-webpack'>
-                  repository</Link>.
-              </p>
-          </div>
-      )
+  handleClickEndButton() {
+    clearInterval(this.state.interval);
+    this.setState({mode: 'ready'});
+  }
+
+  handleChangeTf(event) {
+    this.setState({sourceId: event.target.value})
+  }
+
+  handleToggleSchedules() {
+    if (this.state.isShowSchedules == true) {
+      this.setState({isShowSchedules: false})
+    } else {
+      this.setState({isShowSchedules: true})
     }
+
+  }
+
+  render() {
+    let homeScore = 0;
+    let awayScore = 0;
+
+    try{
+      homeScore = event.teams[0].score;
+      awayScore = event.teams[1].score;
+    }catch(e){
+      console.log('score is null');
+    }
+
+    return (
+      <div>
+        <div>
+          <h1>{this.state.mode}</h1>
+        </div>
+        <div>
+          <p>사용방법</p>
+          <p>sourceId를 입력하고 start를 누르면 됩니다. 정지는 end를 누르면 됩니다.</p>
+          <p>sourceId를 알아내는 방법은 show schedules버튼을 누릅니다. 한번 더 누르면 닫힙니다.</p>
+
+        </div>
+        <div className="hello">
+          <h1>{homeScore}:{awayScore}</h1>
+        </div>
+        <input type="text" value={this.state.sourceId} onChange={(event) => this.handleChangeTf(event)}/>
+        <button onClick={() => this.handleClickStartButton()}>{'start'}</button>
+        <button onClick={() => this.handleClickEndButton()}>{'end'}</button>
+        <button onClick={() => this.handleToggleSchedules()}>{'show schedule'}</button>
+
+        {this.state.isShowSchedules === true ? <PrintSchedule schedules={schedules.schedules}/> : null}
+      </div>
+    )
+  }
 }
