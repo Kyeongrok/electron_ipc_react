@@ -16,7 +16,9 @@ export default class App extends Component {
       interval: null,
       isShowSchedules: false,
       event:{},
-      teams:[]
+      teams:[],
+      callStarTime:'',
+      callEndTime:''
     }
   }
 
@@ -69,8 +71,8 @@ export default class App extends Component {
     let awayScore = 0;
 
     try{
-      homeScore = event.teams[0].score;
-      awayScore = event.teams[1].score;
+      homeScore = this.state.teams[0].score;
+      awayScore = this.state.teams[1].score;
     }catch(e){
       console.log('score is null');
     }
