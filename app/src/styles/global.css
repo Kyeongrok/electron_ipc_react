@@ -5,29 +5,24 @@
     --primary-color: #42b983;
 }
 
-
 /*
  * Global CSS goes here
  */
-html {
-    height: 100%;
-}
-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    margin: auto;
-}
-#app {
-    color: #2c3e50;
-    max-width: 600px;
-    font-family: Source Sans Pro, Helvetica, sans-serif;
-    text-align: center;
-}
-#app p {
-    text-align: justify;
-}
-.hello {
-    color: var(--primary-color);
-}
+html {    height: 100%;}
+body {    display: flex;    align-items: left;    justify-content: left;    height: 100%;    margin: auto;}
+td{padding-left: 5px;}
+
+.firstColumn{ width:120px; }
+.timeColumn{ width:400px; text-align: left; }
+.columnAlignLeft{ width:400px; align: left; }
+.wrapper{ min-height:600px; width:780px; border:1px solid #54728d;}
+#app {color: #2c3e50;    max-width: 600px;    font-family: Source Sans Pro, Helvetica, sans-serif;    text-align: center;}
+#app p {    text-align: justify;    }
+.hello {    color: var(--primary-color);    }
+.hello h1{    float:left;   }
+.hello h2{    float:left; color: var(--primary-color);   }
+
+.size{font-size: 40px}
+.size_color{font-size: 40px; color: var(--primary-color);}
+
+.url{word-break:break-all;}

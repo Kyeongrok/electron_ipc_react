@@ -4,7 +4,7 @@ module.exports = {
     watch: true,
     target: 'electron',
     entry: {
-        'entry': './app/src/entry.js',
+        'renderer/entry': './app/src/renderer/entry.js',
         'main/main': './app/src/main/main.js'
     },
     output: {

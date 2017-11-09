@@ -12,7 +12,7 @@ const eventGetter = require('../getter/eventGetter');
 let mainWindow;
 
 app.on('ready', () => {
-  mainWindow = new BrowserWindow({width: 800, height: 600});
+  mainWindow = new BrowserWindow({width: 1000, height: 500});
   mainWindow.webContents.openDevTools();
   ipcMain.on('REQUEST_EVENT', (_e, sourceId) => {
 
@@ -21,9 +21,10 @@ app.on('ready', () => {
       console.log(url);
       apiCall.request(url)
         .then(text => {
-          const event = eventGetter.get(text);
-          const teams = event.teams;
-          mainWindow.webContents.send('PRINT_TEXT', JSON.stringify(teams));
+          const json = JSON.parse(text);
+          const event = json.apiResults[0].league.season.eventType[0].events[0];
+          const result = {url:url, teams:event.teams, startTimestamp:json.startTimestamp, endTimestamp:json.endTimestamp, timeTaken:json.timeTaken}
+          mainWindow.webContents.send('PRINT_TEXT', JSON.stringify(result));
         })
         .catch((error) => console.error(e));
     }catch (e){
