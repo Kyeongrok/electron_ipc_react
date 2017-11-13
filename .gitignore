@@ -42,3 +42,4 @@ jspm_packages
 .idea/
 app/dist/
 package-lock.json
+electron-react-webpack-win32-x64/
